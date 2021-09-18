@@ -21,6 +21,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+    - name: Upgrade .NET 5 in macOS
+      if: ${{ runner.os == 'macOS' }}
+      run: sed -i '' "s/5.0.100/5.0.202/g" global.json
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore dependencies
