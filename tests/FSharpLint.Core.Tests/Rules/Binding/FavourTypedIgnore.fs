@@ -27,15 +27,19 @@ Console.ReadLine() |> ignore<string>"""
     member this.``untyped ignore has errors``() =
         this.Parse
             """
-Console.ReadLine() |> ignore"""
+Console.ReadLine()
+|> ignore"""
 
         Assert.IsTrue(this.ErrorsExist)
-        Assert.IsTrue(this.ErrorExistsAt(2, 0))
+        Assert.IsTrue(this.ErrorExistsAt(3, 0))
 
     [<Test>]
     member this.``untyped ignore has errors (without pipe)``() =
         this.Parse
             """
- ignore(Console.ReadLine())"""
+ ignore(
+    Console.ReadLine()
+ )"""
 
         Assert.IsTrue(this.ErrorsExist)
+        Assert.IsTrue(this.ErrorExistsAt(1, 0))
