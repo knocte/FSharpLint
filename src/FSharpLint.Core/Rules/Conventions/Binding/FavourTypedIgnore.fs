@@ -20,7 +20,7 @@ let private runner (args: AstNodeRuleParams) =
                            ToText = identifier }))
 
         { Range = range
-          Message = String.Format(Resources.GetString("RulesFavourTypedIgnore"), identifier)
+          Message = String.Format(Resources.GetString "RulesFavourTypedIgnore", identifier)
           SuggestedFix = Some suggestedFix
           TypeChecks = [] }
 
@@ -31,13 +31,15 @@ let private runner (args: AstNodeRuleParams) =
             generateError identifier range text
             |> Array.singleton
 
+    let ignoreFunc = "ignore"
+
     match args.AstNode with
-    | AstNode.Expression (SynExpr.App (_, _, expression, SynExpr.Ident (identifier), range)) when
-        identifier.idText = "ignore"
+    | AstNode.Expression (SynExpr.App (_, _, expression, SynExpr.Ident identifier, range)) when
+        identifier.idText = ignoreFunc
         ->
         isTyped expression identifier.idText range identifier.idText
-    | AstNode.Expression (SynExpr.App (_, _, SynExpr.Ident (identifier), expression, range)) when
-        identifier.idText = "ignore"
+    | AstNode.Expression (SynExpr.App (_, _, SynExpr.Ident identifier, expression, range)) when
+        identifier.idText = ignoreFunc
         ->
         match expression with
         | SynExpr.Paren (expr, _, _, _) -> isTyped expr identifier.idText range identifier.idText
