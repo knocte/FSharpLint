@@ -24,25 +24,23 @@ let private runner (args: AstNodeRuleParams) =
           SuggestedFix = Some suggestedFix
           TypeChecks = [] }
 
+    let isTyped expression identifier range text =
+        match expression with
+        | SynExpr.Typed (_, _, _) -> Array.empty
+        | _ ->
+            generateError identifier range text
+            |> Array.singleton
+
     match args.AstNode with
     | AstNode.Expression (SynExpr.App (_, _, expression, SynExpr.Ident (identifier), range)) when
         identifier.idText = "ignore"
         ->
-        match expression with
-        | SynExpr.Typed (_, _, _) -> Array.empty
-        | _ ->
-            generateError identifier.idText range identifier.idText
-            |> Array.singleton
+        isTyped expression identifier.idText range identifier.idText
     | AstNode.Expression (SynExpr.App (_, _, SynExpr.Ident (identifier), expression, range)) when
         identifier.idText = "ignore"
         ->
         match expression with
-        | SynExpr.Paren (expr, _, _, _) ->
-            match expr with
-            | SynExpr.Typed (_, _, _) -> Array.empty
-            | _ ->
-                generateError identifier.idText range identifier.idText
-                |> Array.singleton
+        | SynExpr.Paren (expr, _, _, _) -> isTyped expr identifier.idText range identifier.idText
         | _ ->
             generateError identifier.idText range identifier.idText
             |> Array.singleton
