@@ -11,7 +11,7 @@ type TestConventionsFailwithBadUsage() =
     [<Test>]
     member this.FailwithWithBadArgumentsEmptyMessage() =
         this.Parse """
-let foo () =
+let private foo () =
     failwith "" """
         Assert.IsTrue this.ErrorsExist
         Assert.IsTrue(this.ErrorExistsAt(3, 4))
