@@ -333,4 +333,7 @@
   <data name="RulesFavourConsistentThis" xml:space="preserve">
     <value>Prefer using '{0}' consistently.</value>
   </data>
+  <data name="RulesFavourNonMutablePropertyInitializationError" xml:space="preserve">
+    <value>Prefer using non mutable property initialization.</value>
+  </data>
 </root>
