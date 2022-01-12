@@ -38,11 +38,8 @@ let traverseSynModule (declarations: List<SynModuleDecl>) (identifiers: List<str
 
     let rec extraFromBindings (bindings: List<SynBinding>) (classInstances: List<string>) =
         match bindings with
-        | SynBinding(_, _, _, _, _, _, _, SynPat.Named(_, ident, _, _, _), _, SynExpr.App(_, _, SynExpr.Ident(id), _, _), _, _)::rest ->
-            if Char.IsUpper id.idText.[0] then
-                extraFromBindings rest (ident.idText::classInstances)
-            else
-                extraFromBindings rest classInstances
+        | SynBinding(_, _, _, _, _, _, _, SynPat.Named(_, ident, _, _, _), _, _expression, _, _)::rest ->
+            extraFromBindings rest (ident.idText::classInstances)
         | _ -> classInstances
 
     let rec traverse (declarations: List<SynModuleDecl>) (classInstances: List<string>) (instancesWithMethodCall: List<string>) =
