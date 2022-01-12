@@ -42,11 +42,14 @@ module Program =
     [<Test>]
     member this.FavourNonMutablePropertyInitializationShouldProduceError_3() =
         this.Parse """
+open System.Net
+
 module Program =
     let someFunction() =
-        // SomeCSharpClass implementation lives in a referenced assembly
-        let someInstance = SomeCSharpClass()
-        someInstance.MyReadWriteProperty <- 2"""
+        // System.Net.Cookie implementation lives in a referenced assembly
+        let someInstance = Cookie()
+        someInstance.Domain <- "example.com"
+"""
 
         Assert.IsTrue this.ErrorsExist
 
@@ -137,9 +140,12 @@ module Program =
     [<Test>]
     member this.FavourNonMutablePropertyInitializationShouldNotProduceError_5() =
         this.Parse """
+open System.Net
+
 module Program =
     let someFunction() =
-        // SomeCSharpClass implementation lives in a referenced assembly
-        let someInstance = SomeCSharpClass(MyReadWriteProperty = 2)"""
+        // System.Net.Cookie implementation lives in a referenced assembly
+        let someInstance = Cookie(Domain = "example.com")
+        ()"""
 
         Assert.IsTrue this.NoErrorsExist
