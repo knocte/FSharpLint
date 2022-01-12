@@ -80,7 +80,7 @@ type SomeClass() =
 
 module Program =
     let someFunction() =
-        let someInstance = SomeClass(MyReadWriteProperty = 2)
+        let someInstance = SomeClass(MyWriteOnlyProperty = 2)
         ()"""
 
         Assert.IsTrue this.NoErrorsExist
