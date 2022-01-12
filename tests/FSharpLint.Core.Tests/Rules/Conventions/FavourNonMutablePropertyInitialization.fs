@@ -45,8 +45,8 @@ module Program =
 module Program =
     let someFunction() =
         // SomeCSharpClass implementation lives in a referenced assembly
-        let someInstance = SomeCSharpClass()
-        someInstance.MyReadWriteProperty <- 2"""
+        let someInstance = System.Net.Cookie()
+        someInstance.Domain <- "NodeEffect" """
 
         Assert.IsTrue this.ErrorsExist
 
@@ -140,6 +140,7 @@ module Program =
 module Program =
     let someFunction() =
         // SomeCSharpClass implementation lives in a referenced assembly
-        let someInstance = SomeCSharpClass(MyReadWriteProperty = 2)"""
+        let someInstance = System.Net.Cookie(Domain = "NodeEffect")
+        ()"""
 
         Assert.IsTrue this.NoErrorsExist
