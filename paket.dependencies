@@ -1,6 +1,6 @@
 source https://api.nuget.org/v3/index.json
 
-framework: netstandard2.0, net6.0
+framework: netstandard2.0, net5.0
 storage: none
 
 nuget Argu
@@ -40,9 +40,8 @@ group Docs
 group Build
   source https://api.nuget.org/v3/index.json
 
-  framework: net6.0
+  framework: netstandard2.0
   storage: none
-  strategy: min
 
   nuget Fake.Core.Target
   nuget Fake.Core.Process
