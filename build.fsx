@@ -4,7 +4,7 @@
 #r "paket: groupref build //"
 #load ".fake/build.fsx/intellisense.fsx"
 
-#r "paket: Fsdk, Version=0.6.0--date20231213-0703.git-d7a5962"
+#r "paket: Fsdk, 0.6.0--date20231213-0703.git-d7a5962"
 
 open Fake.Core
 open Fake.DotNet
