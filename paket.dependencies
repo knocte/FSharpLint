@@ -11,6 +11,7 @@ nuget FSharp.Compiler.Service ~> 40.0
 nuget Ionide.ProjInfo.ProjectSystem ~> 0.53.0
 nuget Ionide.ProjInfo.FCS ~> 0.53.0
 nuget FSharp.Core
+nuget Fsdk ~> 0.6.0--date20231213-0703.git-d7a5962
 nuget nunit
 nuget NUnit3TestAdapter
 nuget Microsoft.NET.Test.Sdk
