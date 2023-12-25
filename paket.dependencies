@@ -25,6 +25,8 @@ nuget Microsoft.Build.Tasks.Core copy_local: false
 nuget Microsoft.Build.Utilities.Core copy_local: false
 nuget Microsoft.Build copy_local: false
 
+nuget FSharp.Core 6.0.0.0
+
 group Docs
   source https://api.nuget.org/v3/index.json
 
@@ -55,3 +57,4 @@ group Build
   nuget Fake.DotNet.MsBuild
   nuget Fake.Api.GitHub
   nuget FSharp.Core 6.0.0.0
+
