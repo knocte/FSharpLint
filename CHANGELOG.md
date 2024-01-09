@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.24.0] - 2024-01-13
+
+- Add new rule UnnecessaryRecKeyword #650 #652 #671 [@Mersho] & [@webwarrior-ws]
+- Fix error linting projects that use .NET Legacy Framework #336 #657 [@su8898] & [@webwarrior-ws]
+- TypePrefixing: new modes "Always", "Hybrid", "Never" (default: Hybrid) #661 [@knocte] & [@webwarrior-ws]
+
 ## [0.23.6] - 2024-01-05
 
 - Fix recent regression in MaxLinesIn* rules #667 [@webwarrior-ws] & [@Mersho]
