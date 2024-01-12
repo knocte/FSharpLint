@@ -60,6 +60,7 @@ let DoNothing = ignore
 let buildDir  = "./build/"
 let nugetDir  = "./out/"
 let rootDir = __SOURCE_DIRECTORY__ |> DirectoryInfo
+let scriptsDir = Path.Combine(rootDir.FullName, "scripts") |> DirectoryInfo
 
 System.Environment.CurrentDirectory <- rootDir.FullName
 let changelogFilename = "CHANGELOG.md"
@@ -86,7 +87,7 @@ let nugetVersion =
                             PreRelease = None }
         let bumpedBaseVersion = string bumped
 
-        let nugetPreRelease = Path.Combine(rootDir.FullName, "nugetPreRelease.fsx")
+        let nugetPreRelease = Path.Combine(scriptsDir.FullName, "nugetPreRelease.fsx")
         let procResult =
             CreateProcess.fromRawCommand
                 "dotnet"
@@ -168,11 +169,12 @@ Target.create "Pack" (fun _ ->
 )
 
 Target.create "Push" (fun _ ->
+    let script = Path.Combine(scriptsDir.FullName, "push.fsx")
     CreateProcess.fromRawCommand
         "dotnet"
         [
                 "fsi"
-                "push.fsx"
+                script
         ]
         |> CreateProcess.ensureExitCode
         |> Proc.run
