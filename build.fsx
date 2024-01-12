@@ -170,15 +170,7 @@ Target.create "Pack" (fun _ ->
 
 Target.create "Push" (fun _ ->
     let script = Path.Combine(scriptsDir.FullName, "push.fsx")
-    CreateProcess.fromRawCommand
-        "dotnet"
-        [
-                "fsi"
-                script
-        ]
-        |> CreateProcess.ensureExitCode
-        |> Proc.run
-        |> ignore
+    exec "dotnet"  (sprintf "fsi %s" script) "."
 )
 
 
