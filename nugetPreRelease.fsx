@@ -1,4 +1,4 @@
-#r "nuget: Fsdk, Version=0.6.0--date20231213-0703.git-d7a5962"
+#load "nuget.fsx"
 
 let args = fsi.CommandLineArgs
 
