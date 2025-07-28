@@ -581,7 +581,7 @@ let private hintError typeChecks hint (args:AstNodeRuleParams) range matchedVari
 
         let suggestedFix = lazy(
             ExpressionUtilities.tryFindTextOfRange range args.FileContent
-            |> Option.map (fun fromText -> { FromText = fromText; FromRange = range; ToText = toText }))
+            |> Option.map (fun fromText -> { FromRange = range; ToText = toText }))
 
         { Range = range; Message = error; SuggestedFix = Some suggestedFix; TypeChecks = typeChecks }
     | Suggestion.Message(message) ->

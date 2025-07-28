@@ -47,8 +47,7 @@ let checkRecursiveAsyncFunction (args:AstNodeRuleParams) (range:Range) (doBangEx
             let suggestedFix = lazy(
                 ExpressionUtilities.tryFindTextOfRange doTokenRange args.FileContent
                 |> Option.map (fun fromText ->
-                    { FromText = fromText
-                      FromRange = doTokenRange
+                    { FromRange = doTokenRange
                       ToText = "return!" }))
 
             { Range = range

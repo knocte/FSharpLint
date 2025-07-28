@@ -109,7 +109,7 @@ let private checkIfPartialIdentifier (config:Config) (identifier:string) (range:
                 {
                     Range = range
                     Message = String.Format(Resources.GetString "RulesConventionsNoPartialFunctionsReplacementError", replacementFunction, identifier)
-                    SuggestedFix = Some (lazy ( Some { FromText = identifier; FromRange = range; ToText = replacementFunction }))
+                    SuggestedFix = Some (lazy ( Some { FromRange = range; ToText = replacementFunction }))
                     TypeChecks = []
                 })
 
@@ -297,7 +297,7 @@ let private isNonStaticInstanceMemberCall (checkFile:FSharpCheckFileResults) nam
                              | Function replacementFunctionName ->
                                 Some { Range = range
                                        Message = String.Format(Resources.GetString "RulesConventionsNoPartialFunctionsReplacementError", replacementFunctionName, fullyQualifiedInstanceMember)
-                                       SuggestedFix = Some (lazy ( Some { FromText = (String.concat "." names) ; FromRange = range; ToText = replacementFunctionName }))
+                                       SuggestedFix = Some (lazy ( Some { FromRange = range; ToText = replacementFunctionName }))
                                        TypeChecks = (fun () -> typeMatches) |> List.singleton }
                         else
                             None
@@ -336,7 +336,7 @@ let private checkMemberCallOnExpression
                 | Function replacementFunctionName ->
                     Some { Range = originalRange
                            Message = String.Format(Resources.GetString "RulesConventionsNoPartialFunctionsReplacementError", replacementFunctionName, fullyQualifiedInstanceMember)
-                           SuggestedFix = Some (lazy ( Some { FromText = (ExpressionUtilities.tryFindTextOfRange originalRange flieContent).Value ; FromRange = originalRange; ToText = replacementFunctionName }))
+                           SuggestedFix = Some (lazy ( Some { FromRange = originalRange; ToText = replacementFunctionName }))
                            TypeChecks = (fun () -> true) |> List.singleton }
             else
                 None)

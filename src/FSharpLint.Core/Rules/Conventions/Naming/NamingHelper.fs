@@ -14,20 +14,20 @@ open FSharp.Compiler.Symbols
 module QuickFixes =
     let removeAllUnderscores (ident:Ident) = lazy(
         let toText = ident.idText.Replace("_", "")
-        Some { FromText = ident.idText; FromRange = ident.idRange; ToText = toText })
+        Some { FromRange = ident.idRange; ToText = toText })
 
     let removeNonPrefixingUnderscores (ident:Ident) = lazy(
         let prefixingUnderscores =
             ident.idText |> Seq.takeWhile (fun x -> x = '_') |> String.Concat
 
         let toText = prefixingUnderscores + ident.idText.Replace("_", "")
-        Some { FromText = ident.idText; FromRange = ident.idRange; ToText = toText })
+        Some { FromRange = ident.idRange; ToText = toText })
 
     let addPrefix prefix (ident:Ident) = lazy(
-        Some { FromText = ident.idText; FromRange = ident.idRange; ToText = prefix + ident.idText })
+        Some { FromRange = ident.idRange; ToText = prefix + ident.idText })
 
     let addSuffix suffix (ident:Ident) = lazy(
-        Some { FromText = ident.idText; FromRange = ident.idRange; ToText = ident.idText + suffix })
+        Some { FromRange = ident.idRange; ToText = ident.idText + suffix })
 
     let private mapFirstChar map (str:string) =
         let prefix =
@@ -41,11 +41,11 @@ module QuickFixes =
 
     let toPascalCase (ident:Ident) = lazy(
         let pascalCaseIdent = ident.idText |> mapFirstChar Char.ToUpper
-        Some { FromText = ident.idText; FromRange = ident.idRange; ToText = pascalCaseIdent })
+        Some { FromRange = ident.idRange; ToText = pascalCaseIdent })
 
     let toCamelCase (ident:Ident) = lazy(
         let camelCaseIdent = ident.idText |> mapFirstChar Char.ToLower
-        Some { FromText = ident.idText; FromRange = ident.idRange; ToText = camelCaseIdent })
+        Some { FromRange = ident.idRange; ToText = camelCaseIdent })
 
 [<Literal>]
 let private NumberOfExpectedBackticks = 4

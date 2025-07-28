@@ -33,7 +33,6 @@ let checkNoTabCharacters literalStrings (args:LineRuleParams) =
                     lazy
                         (Some(
                             { FromRange = range
-                              FromText = "\t"
                               ToText = String.replicate args.GlobalConfig.numIndentationSpaces " " }
                         ))
                 )

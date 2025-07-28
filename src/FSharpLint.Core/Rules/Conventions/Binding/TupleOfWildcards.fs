@@ -28,7 +28,7 @@ let private checkTupleOfWildcards fileContents pattern identifier identifierRang
         let refactorTo = constructorString 1
         let error = String.Format(errorFormat, refactorFrom, refactorTo)
         let suggestedFix = lazy(
-            Some { SuggestedFix.FromRange = identifierRange; FromText = fileContents; ToText = refactorTo })
+            Some { SuggestedFix.FromRange = identifierRange; ToText = refactorTo })
         { Range = range; Message = error; SuggestedFix = Some suggestedFix; TypeChecks = [] } |> Array.singleton
     | _ -> Array.empty
 

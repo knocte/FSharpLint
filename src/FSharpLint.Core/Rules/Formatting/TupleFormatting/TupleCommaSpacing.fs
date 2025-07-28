@@ -22,7 +22,6 @@ let checkTupleCommaSpacing (args:AstNodeRuleParams) (tupleExprs:SynExpr list) tu
                 |> Option.map (fun commaText ->
                     lazy(
                         { FromRange = commaRange
-                          FromText = commaText
                           ToText = ", " } |> Some
                         ) )
             { Range = commaRange

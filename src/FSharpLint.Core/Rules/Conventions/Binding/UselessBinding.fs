@@ -51,9 +51,9 @@ let private runner (args:AstNodeRuleParams) =
     let maybeSuggestedFix = 
         match args.GetParents(args.NodeIndex) with
         | AstNode.ModuleDeclaration(SynModuleDecl.Let(_, _, range)) :: _ ->
-            Some({ FromRange = range; FromText = "let"; ToText = "" })
+            Some({ FromRange = range; ToText = "" })
         | AstNode.Expression(SynExpr.LetOrUse(_, false, _, _, range, _)) :: _ -> 
-            Some({ FromRange = range; FromText = "use"; ToText = "" })
+            Some({ FromRange = range; ToText = "" })
         | _ -> None
     match args.AstNode with
     | AstNode.Binding(SynBinding(_, _, _, isMutable, _, _, _, pattern, _, expr, range, _, _))
