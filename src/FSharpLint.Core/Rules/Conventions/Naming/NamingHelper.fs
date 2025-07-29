@@ -149,10 +149,10 @@ let private checkIdentifierPart (config:NamingConfig) (identifier:Ident) (idText
 let private checkIdentifier (namingConfig:NamingConfig) (identifier:Ident) (idText:string) =
     if notOperator idText && isNotDoubleBackTickedIdent identifier then
         checkIdentifierPart namingConfig identifier idText
-        |> Array.map (fun (message, suggestedFix) ->
+        |> Array.map (fun (message, fix) ->
             { Range = identifier.idRange
               Message = message
-              SuggestedFix = Some suggestedFix
+              Fix = Some fix
               TypeChecks = [] })
     else
         Array.empty

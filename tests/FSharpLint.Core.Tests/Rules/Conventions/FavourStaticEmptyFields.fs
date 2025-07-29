@@ -170,7 +170,7 @@ match foo with
         Assert.IsTrue this.NoErrorsExist
 
     [<Test>]
-    member this.FavourStaticEmptyFieldsSuggestedFixForString() =
+    member this.FavourStaticEmptyFieldsFixForString() =
         let source = "let foo = \"\""
 
         let expected = "let foo = String.Empty"
@@ -184,7 +184,7 @@ match foo with
         Assert.AreEqual(expected, result)
 
     [<Test>]
-    member this.FavourStaticEmptyFieldsSuggestedFixForList() =
+    member this.FavourStaticEmptyFieldsFixForList() =
         let source = "let foo = []"
 
         let expected = "let foo = List.Empty"
@@ -198,7 +198,7 @@ match foo with
         Assert.AreEqual(expected, result)
 
     [<Test>]
-    member this.FavourStaticEmptyFieldsSuggestedFixForArray() =
+    member this.FavourStaticEmptyFieldsFixForArray() =
         let source = "let foo = [||]"
 
         let expected = "let foo = Array.empty"

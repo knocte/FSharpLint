@@ -11,12 +11,12 @@ let private checkForWildcardNamedWithAsPattern fileContents pattern =
     match pattern with
     | SynPat.As(SynPat.Wild(wildcardRange), SynPat.Named(SynIdent(identifier, _), _, _, _), range)
         when wildcardRange <> range ->
-        let suggestedFix = 
+        let fix =
             lazy(
                 Some { FromRange = range; ToText = identifier.idText })
         { Range = range
           Message = Resources.GetString("RulesWildcardNamedWithAsPattern")
-          SuggestedFix = Some suggestedFix
+          Fix = Some fix
           TypeChecks = [] } |> Array.singleton
     | _ -> Array.empty
 

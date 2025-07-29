@@ -29,7 +29,7 @@ type TestTypographyTabCharacterInFile() =
         Assert.IsFalse(this.ErrorExistsAt(4, 13))
 
     [<Test>]
-    member this.TabCharacterInFileSuggestedFix() =
+    member this.TabCharacterInFileFix() =
         let source = "\t"
         let expected = String.replicate 4 " "
         this.Parse source

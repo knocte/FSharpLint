@@ -68,7 +68,7 @@ type Cat() =
         Assert.IsFalse(this.ErrorsExist)
 
     [<Test>]
-    member this.UselessBindingSuggestedFix() =
+    member this.UselessBindingFix() =
         let source = """
 module Program
 
@@ -89,7 +89,7 @@ let a = 10
         Assert.AreEqual(expected, result)
 
     [<Test>]
-    member this.UselessBindingWithParensSuggestedFix() =
+    member this.UselessBindingWithParensFix() =
         let source = """
 module Program
 

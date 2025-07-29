@@ -51,7 +51,7 @@ let a = List.iter (fun x -> ()) []
         Assert.IsFalse(this.ErrorsExist)
 
     [<Test>]
-    member this.LetWildcardUnitValueSuggestedFix() =
+    member this.LetWildcardUnitValueFix() =
         let source = """
 module Program
 
@@ -69,7 +69,7 @@ module Program
         Assert.AreEqual(expected, result)
 
     [<Test>]
-    member this.LetWildCardInParanUnitValueSuggestedFix() =
+    member this.LetWildCardInParanUnitValueFix() =
         let source = """
 module Program
 
