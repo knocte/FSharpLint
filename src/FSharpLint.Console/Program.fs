@@ -134,7 +134,7 @@ let private start (arguments:ParseResults<ToolArgs>) (toolsPath:Ionide.ProjInfo.
             let increment = 1
             let noFixIncrement = 0
             let countSuggestedFix = 
-                List.fold (+) 0 (
+                List.fold String.concat 0 (
                     List.map (fun (element: Suggestion.LintWarning) ->
                         let sourceCode = File.ReadAllText element.FilePath
                         if String.Equals(ruleName, element.RuleName, StringComparison.InvariantCultureIgnoreCase) then
