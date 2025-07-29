@@ -36,7 +36,7 @@ type TestTypographyTabCharacterInFile() =
 
         Assert.IsTrue(this.ErrorExistsAt(1, 0))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 

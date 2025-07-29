@@ -64,7 +64,7 @@ module Program
 
         Assert.IsTrue(this.ErrorExistsAt(4, 4))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 
@@ -84,6 +84,6 @@ module Program
 
         Assert.IsTrue(this.ErrorExistsAt(4, 4))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)

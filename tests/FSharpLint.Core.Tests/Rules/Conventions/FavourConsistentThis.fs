@@ -133,7 +133,7 @@ type Foo =
 
         Assert.IsTrue this.ErrorsExist
         
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 
@@ -160,7 +160,7 @@ type Foo =
         Assert.IsTrue this.ErrorsExist
         Assert.IsTrue(this.ErrorExistsAt(6, 11))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 
@@ -182,6 +182,6 @@ type CustomerName(firstName, middleInitial, lastName) =
         Assert.IsTrue this.ErrorsExist
         Assert.IsTrue(this.ErrorExistsAt(4, 11))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)

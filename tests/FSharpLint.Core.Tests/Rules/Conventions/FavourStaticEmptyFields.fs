@@ -179,7 +179,7 @@ match foo with
 
         Assert.IsTrue this.ErrorsExist
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 
@@ -193,7 +193,7 @@ match foo with
 
         Assert.IsTrue this.ErrorsExist
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 
@@ -207,6 +207,6 @@ match foo with
 
         Assert.IsTrue this.ErrorsExist
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)

@@ -73,7 +73,7 @@ type TestRuleBase () =
     member this.AssertNoWarnings() =
         Assert.IsFalse(this.ErrorsExist, "Expected no errors, but was: " + this.ErrorMsg)
 
-    member this.ApplyQuickFix (source:string) =
+    member this.ApplyFix (source:string) =
         let firstSuggestedFix =
             suggestions
             |> Seq.choose (fun x -> x.Details.SuggestedFix)

@@ -84,7 +84,7 @@ let a = 10
 
         Assert.IsTrue(this.ErrorExistsAt(5, 4))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)
 
@@ -106,6 +106,6 @@ let a = 10
 
         Assert.IsTrue(this.ErrorExistsAt(5, 4))
 
-        let result = this.ApplyQuickFix source
+        let result = this.ApplyFix source
 
         Assert.AreEqual(expected, result)

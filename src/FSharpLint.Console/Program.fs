@@ -42,7 +42,7 @@ with
             match this with
             | Format _ -> "Output format of the linter."
             | Lint _ -> "Runs FSharpLint against a file or a collection of files."
-            | Fix _ -> "Apply quickfixes for specified rule name or names (comma separated)."
+            | Fix _ -> "Apply fixes for specified rule name or names (comma separated)."
             | Version -> "Prints current version."
 
 // TODO: investigate erroneous warning on this type definition
