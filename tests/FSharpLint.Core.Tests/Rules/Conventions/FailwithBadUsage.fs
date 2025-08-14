@@ -44,9 +44,9 @@ let bar () =
     member this.FailwithWithGoodArguments() =
         this.Parse """
 let foo () =
-    failwith "foo"
+    failwith "foo2"
 let bar () =
-    failwith "bar"
+    failwith "bar2"
 """
 
         this.AssertNoWarnings()
@@ -55,7 +55,7 @@ let bar () =
     member this.FailwithWithGoodArguments2() =
         this.Parse """
 let foo () =
-    failwith "foo"
+    failwith "foo3"
 """
 
         this.AssertNoWarnings()
@@ -79,7 +79,7 @@ try
     foo()
 with
 | e ->
-    failwith "bar"
+    failwith "bar4"
 """
 
         Assert.IsTrue this.ErrorsExist
@@ -92,7 +92,7 @@ try
     foo()
 with
 | e ->
-    raise new Exception("bar",e)
+    raise new Exception("bar5", e)
 """
 
         Assert.IsTrue this.NoErrorsExist
@@ -104,17 +104,17 @@ try
     foo()
 with
 | e ->
-    failwithf "bar"
+    failwithf "bar6 %i" 1
 """
 
         Assert.IsTrue this.ErrorsExist
         Assert.IsTrue(this.ErrorExistsAt(6, 4))
 
     [<Test>]
-    member this.FailwithWithfGoodArguments2() =
+    member this.FailwithfWithGoodArguments2() =
         this.Parse """
 let foo () =
-    failwithf "foo"
+    failwithf "foo7 %i" 1
 """
 
         this.AssertNoWarnings()
