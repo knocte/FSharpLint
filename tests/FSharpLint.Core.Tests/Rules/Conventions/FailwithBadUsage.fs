@@ -108,7 +108,7 @@ with
 """
 
         Assert.IsTrue this.ErrorsExist
-        Assert.IsTrue(this.ErrorExistsAt(6, 4))
+        Assert.IsTrue(this.ErrorExistsOnLine 6)
 
     [<Test>]
     member this.FailwithfWithGoodArguments2() =
