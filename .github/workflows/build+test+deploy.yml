@@ -113,8 +113,6 @@ jobs:
       run: rm -f global.json
     - name: Restore tools
       run: dotnet tool restore
-    - name: info!
-      run: dotnet --info
     - name: Restore dependencies
       run: dotnet restore
     - name: Run Fornax
