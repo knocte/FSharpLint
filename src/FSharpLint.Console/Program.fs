@@ -195,6 +195,9 @@ let toolsPath = Ionide.ProjInfo.Init.init (DirectoryInfo <| Directory.GetCurrent
 
 [<EntryPoint>]
 let main argv =
+    System.Console.WriteLine "Please upgrade to latest version (if this is already the only/latest version, then it means this package is not working yet; in the meantime use `dotnet-fsharplint`)."
+    System.Console.WriteLine "For more info see https://github.com/fsprojects/FSharpLint/pull/778#issuecomment-3527499458"
+    System.Environment.Exit 1
     let errorHandler = ProcessExiter(colorizer = function
         | ErrorCode.HelpText -> None
         | _ -> Some ConsoleColor.Red)

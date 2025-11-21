@@ -31,10 +31,6 @@ jobs:
       run: dotnet restore
     - name: Build
       run: make
-    - name: Run tests
-      run: make check
-    - name: Run FSharpLint on itself
-      run: make selfcheck
 
 
   deployReleaseBinaries:
