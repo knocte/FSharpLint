@@ -120,6 +120,7 @@ let constructTypePrefixingRuleWithConfig rule (ruleConfig: RuleConfig<TypePrefix
     else
         None
 
+[<Obsolete "Please provide formatting rules at root level. This type will be removed in the near future.">]
 type TupleFormattingConfig =
     { tupleCommaSpacing:EnabledConfig option
       tupleIndentation:EnabledConfig option
