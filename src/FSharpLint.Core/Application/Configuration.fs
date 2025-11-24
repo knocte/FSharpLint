@@ -17,10 +17,9 @@ let SettingsFileName = "fsharplint.json"
 exception ConfigurationException of string
 
 [<Literal>]
-let private obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
-
+let private ObsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
 [<Literal>]
-let TreatAsError = false
+let private ObsoleteWarnTreatAsError = false
 
 module internal FSharpJsonConverter =
 
@@ -157,7 +156,7 @@ with
 // to be able to use our own types that we mark as Obsolete
 #nowarn "44"
 
-[<Obsolete(obsoleteMsg, TreatAsError)>]
+[<Obsolete(ObsoleteMsg, ObsoleteWarnTreatAsError)>]
 type FormattingConfig =
     { typedItemSpacing:RuleConfig<TypedItemSpacing.Config> option
       typePrefixing:RuleConfig<TypePrefixing.Config> option
