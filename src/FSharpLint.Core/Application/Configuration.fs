@@ -154,6 +154,9 @@ let ObsoleteMsg = "Please provide formatting rules at root level. This type will
 [<Literal>]
 let TreatAsError = false
 
+// to be able to use our own types that we mark as Obsolete
+#nowarn "44"
+
 [<Obsolete(ObsoleteMsg, TreatAsError)>]
 type FormattingConfig =
     { typedItemSpacing:RuleConfig<TypedItemSpacing.Config> option
@@ -384,9 +387,6 @@ type HintConfig = {
 type GlobalConfig = {
     numIndentationSpaces:int option
 }
-
-// to be able to use our own types that we mark as Obsolete
-#nowarn "44"
 
 type Configuration =
     { Global:GlobalConfig option
