@@ -120,10 +120,6 @@ let constructTypePrefixingRuleWithConfig rule (ruleConfig: RuleConfig<TypePrefix
     else
         None
 
-// to be able to use our own types that we mark as Obsolete
-#nowarn "44"
-
-[<Obsolete "Please provide formatting rules at root level. This type will be removed in the near future.">]
 type TupleFormattingConfig =
     { tupleCommaSpacing:EnabledConfig option
       tupleIndentation:EnabledConfig option
@@ -152,6 +148,10 @@ with
                 Option.bind (constructRuleIfEnabled PatternMatchExpressionIndentation.rule) this.patternMatchExpressionIndentation
             |]
 
+[<Literal>]
+let private obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
+
+[<Obsolete obsoleteMsg>]
 type FormattingConfig =
     { typedItemSpacing:RuleConfig<TypedItemSpacing.Config> option
       typePrefixing:RuleConfig<TypePrefixing.Config> option
@@ -381,6 +381,9 @@ type HintConfig = {
 type GlobalConfig = {
     numIndentationSpaces:int option
 }
+
+// to be able to use our own types that we mark as Obsolete
+#nowarn "44"
 
 type Configuration =
     { Global:GlobalConfig option
