@@ -149,7 +149,7 @@ with
             |]
 
 [<Literal>]
-let obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
+let private obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
 
 [<Literal>]
 let TreatAsError = false
