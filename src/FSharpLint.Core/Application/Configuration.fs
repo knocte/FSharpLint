@@ -1,6 +1,9 @@
 ﻿/// Loads configuration file from JSON into an object.
 module FSharpLint.Framework.Configuration
 
+// to be able to use our own types that we mark as Obsolete
+#nowarn "44"
+
 open System
 open System.IO
 open System.Reflection
