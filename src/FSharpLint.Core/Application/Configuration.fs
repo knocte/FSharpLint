@@ -16,6 +16,12 @@ let SettingsFileName = "fsharplint.json"
 
 exception ConfigurationException of string
 
+[<Literal>]
+let private obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
+
+[<Literal>]
+let TreatAsError = false
+
 module internal FSharpJsonConverter =
 
     let jsonOptions =
@@ -147,12 +153,6 @@ with
                 Option.bind (constructRuleWithConfig PatternMatchClauseIndentation.rule) this.patternMatchClauseIndentation
                 Option.bind (constructRuleIfEnabled PatternMatchExpressionIndentation.rule) this.patternMatchExpressionIndentation
             |]
-
-[<Literal>]
-let private obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
-
-[<Literal>]
-let TreatAsError = false
 
 // to be able to use our own types that we mark as Obsolete
 #nowarn "44"
