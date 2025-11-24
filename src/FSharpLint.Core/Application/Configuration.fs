@@ -1,9 +1,6 @@
 ﻿/// Loads configuration file from JSON into an object.
 module FSharpLint.Framework.Configuration
 
-// to be able to use our own types that we mark as Obsolete
-#nowarn "44"
-
 open System
 open System.IO
 open System.Reflection
@@ -122,6 +119,9 @@ let constructTypePrefixingRuleWithConfig rule (ruleConfig: RuleConfig<TypePrefix
         Some(rule config)
     else
         None
+
+// to be able to use our own types that we mark as Obsolete
+#nowarn "44"
 
 [<Obsolete "Please provide formatting rules at root level. This type will be removed in the near future.">]
 type TupleFormattingConfig =
