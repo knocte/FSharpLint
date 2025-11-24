@@ -149,9 +149,12 @@ with
             |]
 
 [<Literal>]
-let private obsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
+let ObsoleteMsg = "Please provide formatting rules at root level. This type will be removed in the near future."
 
-[<Obsolete obsoleteMsg>]
+[<Literal>]
+let TreatAsError = false
+
+[<Obsolete(ObsoleteMsg, TreatAsError)>]
 type FormattingConfig =
     { typedItemSpacing:RuleConfig<TypedItemSpacing.Config> option
       typePrefixing:RuleConfig<TypePrefixing.Config> option
