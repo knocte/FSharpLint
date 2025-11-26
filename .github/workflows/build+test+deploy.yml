@@ -115,6 +115,8 @@ jobs:
     container:
       image: mcr.microsoft.com/dotnet/sdk:8.0
     steps:
+      - name: List .NET SDKs
+        run: dotnet --list-sdks
       - uses: actions/checkout@v4
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -149,6 +151,8 @@ jobs:
     container:
       image: mcr.microsoft.com/dotnet/sdk:9.0
     steps:
+      - name: List .NET SDKs
+        run: dotnet --list-sdks
       - uses: actions/checkout@v4
       - name: Download artifact
         uses: actions/download-artifact@v4
@@ -181,7 +185,8 @@ jobs:
     needs: deployReleaseBinaries
     runs-on: ubuntu-latest
     steps:
-      - run: dotnet --list-sdks    
+      - name: List .NET SDKs
+        run: dotnet --list-sdks
       - uses: actions/checkout@v4
       - name: Download artifact
         uses: actions/download-artifact@v4
