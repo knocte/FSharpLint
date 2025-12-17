@@ -74,3 +74,14 @@ module Program
 """
 
         Assert.IsTrue this.ErrorsExist
+
+    [<Test>]
+    member this.``unresolved type with 'use' should not give rule violations``() =
+        this.Parse """
+module Program
+    let SomeFunc() =
+        let foo = new UnresolvedType() |> ignore
+        foo.Foo
+"""
+
+        Assert.IsTrue this.ErrorsExist
