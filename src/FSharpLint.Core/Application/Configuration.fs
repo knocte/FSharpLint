@@ -418,13 +418,16 @@ type GlobalConfig = {
 
 type Configuration =
     { Global:GlobalConfig option
+
       // Deprecated grouped configs. TODO: remove in next major release
       /// DEPRECATED, provide formatting rules at root level.
+      [<Obsolete "Rather provide formatting rules at the root level">]
       formatting:FormattingConfig option
       /// DEPRECATED, provide conventions rules at root level.
       conventions:ConventionsConfig option
       /// DEPRECATED, provide typography rules at root level.
       typography:TypographyConfig option
+
       ignoreFiles:string [] option
       Hints:HintConfig option
       TypedItemSpacing:RuleConfig<TypedItemSpacing.Config> option
