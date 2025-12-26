@@ -96,8 +96,6 @@ module IgnoreFiles =
                 when isCurrentlyIgnored && pathMatchesGlob glob segments isDirectory -> false
             | _ -> isCurrentlyIgnored) false ignorePaths
 
-// Non-standard record field naming for config serialization.
-// fsharplint:disable RecordFieldNames
 type RuleConfig<'Config> = {
     Enabled:bool
     Config:'Config option
