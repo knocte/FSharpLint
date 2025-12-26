@@ -121,18 +121,18 @@ let constructTypePrefixingRuleWithConfig rule (ruleConfig: RuleConfig<TypePrefix
 let private getOrEmptyList hints = Option.defaultValue Array.empty hints
 
 type HintConfig = {
-    add:string [] option
-    ignore:string [] option
+    Add:string [] option
+    Ignore:string [] option
 }
 
 type GlobalConfig = {
-    numIndentationSpaces:int option
+    NumIndentationSpaces:int option
 }
 
 type Configuration =
     { Global:GlobalConfig option
 
-      ignoreFiles:string [] option
+      IgnoreFiles:string [] option
       Hints:HintConfig option
       TypedItemSpacing:RuleConfig<TypedItemSpacing.Config> option
       TypePrefixing:RuleConfig<TypePrefixing.Config> option
@@ -223,7 +223,7 @@ type Configuration =
 with
     static member Zero = {
         Global = None
-        ignoreFiles = None
+        IgnoreFiles = None
         Hints = None
 
         // Configs for rules.
@@ -358,7 +358,7 @@ type LoadedRules =
 let getGlobalConfig (globalConfig:GlobalConfig option) =
     globalConfig
     |> Option.map (fun globalConfig -> {
-        Rules.GlobalRuleConfig.numIndentationSpaces = globalConfig.numIndentationSpaces |> Option.defaultValue Rules.GlobalRuleConfig.Default.numIndentationSpaces
+        Rules.GlobalRuleConfig.NumIndentationSpaces = globalConfig.NumIndentationSpaces |> Option.defaultValue Rules.GlobalRuleConfig.Default.NumIndentationSpaces
     }) |> Option.defaultValue Rules.GlobalRuleConfig.Default
 
 let private parseHints (hints:string []) =
@@ -412,7 +412,7 @@ let flattenConfig (config:Configuration) =
     let deprecatedAllRules =
         Array.concat
             [|
-                config.Hints |> Option.map (fun config -> HintMatcher.rule { HintMatcher.Config.HintTrie = parseHints (getOrEmptyList config.add) }) |> Option.toArray
+                config.Hints |> Option.map (fun config -> HintMatcher.rule { HintMatcher.Config.HintTrie = parseHints (getOrEmptyList config.Add) }) |> Option.toArray
             |]
 
     let allRules =
