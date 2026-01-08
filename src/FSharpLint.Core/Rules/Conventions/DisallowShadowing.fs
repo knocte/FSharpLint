@@ -17,7 +17,7 @@ let rec private extractIdentifiersFromSimplePats (simplePats: SynSimplePats) : L
             extractIdentifier pat
 
     match simplePats with
-    | SynSimplePats.SimplePats(patterns, _) ->
+    | SynSimplePats.SimplePats(patterns, _, _) ->
         patterns |> List.map extractIdentifier
     | SynSimplePats.Typed(pats, _, _) -> 
         extractIdentifiersFromSimplePats pats
