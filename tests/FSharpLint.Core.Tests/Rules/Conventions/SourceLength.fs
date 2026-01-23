@@ -266,18 +266,18 @@ type Class() =
     member this.Member1 () =
         %s{generateNewLines MemberLength 8}
         ()
-\"\"\")
+"""
 
         Assert.IsTrue(this.ErrorExistsAt(5, 4))
 
     [<Test>]
     member this.MemberNotTooManyLines() =
-        this.Parse \"\"\"
+        this.Parse """
 module Program
 
 type Class() =
     member this.Member1 () = ()
-\"\"""
+"""
 
         Assert.IsFalse(this.ErrorExistsAt(5, 4))
 
