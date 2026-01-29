@@ -14,6 +14,10 @@ type IOutput =
 
 type StandardOutput () =
 
+    let asyncGetErrorMessage (range:Range) =
+        let error = Resources.GetString("LintSourceError")
+        String.Format(error, range.StartLine, range.StartColumn)
+
     let getErrorMessage (range:Range) =
         let error = Resources.GetString("LintSourceError")
         String.Format(error, range.StartLine, range.StartColumn)
