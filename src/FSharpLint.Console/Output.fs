@@ -14,7 +14,7 @@ type IOutput =
 
 type StandardOutput () =
 
-    let asyncGetErrorMessage (range:Range) =
+    let asyncGetErrorMessage (range:Range): string =
         let error = Resources.GetString("LintSourceError")
         String.Format(error, range.StartLine, range.StartColumn)
 
