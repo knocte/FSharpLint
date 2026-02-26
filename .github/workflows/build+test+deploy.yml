@@ -28,7 +28,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --verbosity detailed
     - name: Build
       run: make
     - name: Run tests
@@ -119,7 +119,7 @@ jobs:
     - name: Restore tools
       run: dotnet tool restore
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --verbosity detailed
     - name: Run Fornax
       run: make docs
     - name: Deploy (if tag)
