@@ -1,5 +1,6 @@
 ﻿module FSharpLint.Rules.Utilities
 
+open System.IO
 open FSharp.Compiler.CodeAnalysis
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Syntax
@@ -39,7 +40,7 @@ module TypedTree =
         | _ -> None
 
 module LibraryHeuristics =
-    type LibraryHeuristicResultByProjectName =
+    type LibraryHeuristicResult =
         | Likely
         | Unlikely
         | Uncertain
@@ -62,10 +63,11 @@ module LibraryHeuristics =
             '-'
         |]
 
-    let howLikelyProjectIsLibrary (projectFileName: string): LibraryHeuristicResultByProjectName =
+    let howLikelyLintTargetIsInLibrary (targetFile: FileInfo): LibraryHeuristicResult =
         let libraryAbbrev = "lib"
+        let targetName = Path.GetFileNameWithoutExtension targetFile.FullName
         let nameSegments =
-            Helper.Naming.QuickFixes.splitByCaseChange projectFileName
+            Helper.Naming.QuickFixes.splitByCaseChange targetName
             |> Seq.map (fun segment -> segment.ToLowerInvariant())
         if nameSegments |> Seq.contains libraryAbbrev then
             Likely
@@ -81,7 +83,7 @@ module LibraryHeuristics =
                     )
             ) then
             Unlikely
-        elif projectFileName.ToLowerInvariant().EndsWith libraryAbbrev then
+        elif targetName.ToLowerInvariant().EndsWith libraryAbbrev then
             Likely
         else
             Uncertain

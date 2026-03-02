@@ -1,5 +1,6 @@
 ﻿module FSharpLint.Rules.NoAsyncRunSynchronouslyInLibrary
 
+open System.IO
 open FSharp.Compiler.Syntax
 open FSharp.Compiler.Symbols
 open FSharp.Compiler.Text
@@ -103,22 +104,22 @@ let checkIfInLibrary (args: AstNodeRuleParams) : bool =
         ||
         match (args.CheckInfo, args.ProjectCheckInfo) with
         | Some checkFileResults, Some checkProjectResults ->
-            let projectFile = System.IO.FileInfo checkProjectResults.ProjectContext.ProjectOptions.ProjectFileName
-            match howLikelyProjectIsLibrary projectFile.Name with
+            let projectFile = FileInfo checkProjectResults.ProjectContext.ProjectOptions.ProjectFileName
+            match howLikelyLintTargetIsInLibrary projectFile with
             | Likely -> false
             | Unlikely -> true
             | Uncertain ->
                 hasEntryPoint checkFileResults args.ProjectCheckInfo
                 || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
         | Some checkFileResults, None ->
-            match howLikelyProjectIsLibrary args.FilePath with
+            match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
             | Likely -> false
             | Unlikely -> true
             | Uncertain ->
                 hasEntryPoint checkFileResults None
                 || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
         | _ ->
-            match howLikelyProjectIsLibrary args.FilePath with
+            match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
             | Likely -> false
             | Unlikely -> true
             | Uncertain -> areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo

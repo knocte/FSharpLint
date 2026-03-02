@@ -1,6 +1,7 @@
 ﻿module FSharpLint.Rules.AsynchronousFunctionNames
 
 open System
+open System.IO
 open FSharpLint.Framework
 open FSharpLint.Framework.Suggestion
 open FSharpLint.Framework.Ast
@@ -33,7 +34,10 @@ let runner (config: Config) (args: AstNodeRuleParams) =
 
     let likelyhoodOfBeingInLibrary =
         match args.ProjectCheckInfo with
-        | Some projectInfo -> howLikelyProjectIsLibrary projectInfo.ProjectContext.ProjectOptions.ProjectFileName
+        | Some projectInfo ->
+            projectInfo.ProjectContext.ProjectOptions.ProjectFileName
+            |> FileInfo
+            |> howLikelyLintTargetIsInLibrary
         | None -> Unlikely
 
     if config.Mode = OnlyPublicAPIsInLibraries && likelyhoodOfBeingInLibrary <> Likely then
