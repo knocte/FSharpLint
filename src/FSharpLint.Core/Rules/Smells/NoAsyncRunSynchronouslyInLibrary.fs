@@ -15,7 +15,13 @@ let hasEntryPoint (checkFileResults: FSharpCheckFileResults) (maybeProjectCheckR
     let hasEntryPointInTheSameFile =
         match checkFileResults.ImplementationFile with
         | Some implFile -> implFile.HasExplicitEntryPoint
-        | None -> false
+        | None -> 
+            let allSymbolUses = checkFileResults.GetAllUsesOfAllSymbolsInFile()
+            allSymbolUses 
+                |> Seq.exists 
+                    (fun symbolUse -> 
+                        symbolUse.IsFromDefinition
+                        && symbolUse.Symbol.HasAttribute<EntryPointAttribute>() )
 
     hasEntryPointInTheSameFile
     ||
@@ -91,7 +97,7 @@ let isInObsoleteMethodOrFunction parents =
 
     parents |> List.exists isObsolete
 
-let checkIfInLibrary (args: AstNodeRuleParams) (range: range) : array<WarningDetails> =
+let checkIfInLibrary (args: AstNodeRuleParams) : bool =
     let ruleNotApplicable =
         isInObsoleteMethodOrFunction (args.GetParents args.NodeIndex)
         ||
@@ -109,22 +115,23 @@ let checkIfInLibrary (args: AstNodeRuleParams) (range: range) : array<WarningDet
             || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
         | _ ->
             areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
-    
-    if ruleNotApplicable then
-        Array.empty
-    else
-        Array.singleton 
-            { 
-                Range = range
-                Message = Resources.GetString "NoAsyncRunSynchronouslyInLibrary"
-                SuggestedFix = None
-                TypeChecks = List.Empty 
-            }
+
+    ruleNotApplicable
 
 let runner args =
     match args.AstNode with
     | AstNode.Identifier(["Async"; "RunSynchronously"], range) ->
-        checkIfInLibrary args range
+        let ruleIsApplicable = not (checkIfInLibrary args)
+        if ruleIsApplicable then
+            Array.singleton 
+                { 
+                    Range = range
+                    Message = Resources.GetString "NoAsyncRunSynchronouslyInLibrary"
+                    SuggestedFix = None
+                    TypeChecks = List.Empty 
+                }
+        else
+            Array.empty
     | _ -> Array.empty
 
 let rule =
