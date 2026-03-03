@@ -64,26 +64,32 @@ module LibraryHeuristics =
         |]
 
     let howLikelyLintTargetIsInLibrary (targetFile: FileInfo): LibraryHeuristicResult =
-        let libraryAbbrev = "lib"
-        let targetName = Path.GetFileNameWithoutExtension targetFile.FullName
-        let nameSegments =
-            Helper.Naming.QuickFixes.splitByCaseChange targetName
-            |> Seq.map (fun segment -> segment.ToLowerInvariant())
-        if nameSegments |> Seq.contains libraryAbbrev then
-            Likely
-        elif
-            nameSegments
-            |> Seq.exists (
-                fun segment ->
-                    let subSegments = segment.Split possibleProjectNameSegmentSeparators
-                    subSegments
-                    |> Seq.exists (fun subSegment ->
-                        projectNamesUnlikelyToBeLibraries
-                        |> Seq.exists (fun noLibName -> noLibName = subSegment)
-                    )
-            ) then
-            Unlikely
-        elif targetName.ToLowerInvariant().EndsWith libraryAbbrev then
-            Likely
-        else
-            Uncertain
+        let howLikelyIsInLibrary (fs: FileSystemInfo): LibraryHeuristicResult =
+            let libraryAbbrev = "lib"
+            let targetName = Path.GetFileNameWithoutExtension fs.FullName
+            let nameSegments =
+                Helper.Naming.QuickFixes.splitByCaseChange targetName
+                |> Seq.map (fun segment -> segment.ToLowerInvariant())
+            if nameSegments |> Seq.contains libraryAbbrev then
+                Likely
+            elif
+                nameSegments
+                |> Seq.exists (
+                    fun segment ->
+                        let subSegments = segment.Split possibleProjectNameSegmentSeparators
+                        subSegments
+                        |> Seq.exists (fun subSegment ->
+                            projectNamesUnlikelyToBeLibraries
+                            |> Seq.exists (fun noLibName -> noLibName = subSegment)
+                        )
+                ) then
+                Unlikely
+            elif targetName.ToLowerInvariant().EndsWith libraryAbbrev then
+                Likely
+            else
+                Uncertain
+
+        match howLikelyIsInLibrary targetFile with
+        | Uncertain ->
+            howLikelyIsInLibrary targetFile.Directory
+        | likelyHoodForFile -> likelyHoodForFile

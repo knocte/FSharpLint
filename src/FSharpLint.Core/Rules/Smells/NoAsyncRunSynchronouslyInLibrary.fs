@@ -1,5 +1,6 @@
 ﻿module FSharpLint.Rules.NoAsyncRunSynchronouslyInLibrary
 
+open System
 open System.IO
 open FSharp.Compiler.Syntax
 open FSharp.Compiler.Symbols
@@ -112,17 +113,26 @@ let checkIfInLibrary (args: AstNodeRuleParams) : bool =
                 hasEntryPoint checkFileResults args.ProjectCheckInfo
                 || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
         | Some checkFileResults, None ->
-            match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
-            | Likely -> false
-            | Unlikely -> true
-            | Uncertain ->
+            // args.FilePath is empty when running tests
+            if String.IsNullOrEmpty args.FilePath then
                 hasEntryPoint checkFileResults None
                 || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+            else
+                match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
+                | Likely -> false
+                | Unlikely -> true
+                | Uncertain ->
+                    hasEntryPoint checkFileResults None
+                    || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
         | _ ->
-            match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
-            | Likely -> false
-            | Unlikely -> true
-            | Uncertain -> areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+            // args.FilePath is empty when running tests
+            if String.IsNullOrEmpty args.FilePath then
+                areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+            else
+                match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
+                | Likely -> false
+                | Unlikely -> true
+                | Uncertain -> areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
 
     ruleNotApplicable
 
