@@ -1,5 +1,6 @@
 ﻿module FSharpLint.Core.Tests.Rules.Smells.NoAsyncRunSynchronouslyInLibrary
 
+open System
 open System.IO
 open NUnit.Framework
 open FSharpLint.Framework.Rules
@@ -254,5 +255,83 @@ type TestNoAsyncRunSynchronouslyInLibraryHeuristic() =
         Assert.AreEqual(
             LibraryHeuristicResult.Uncertain,
             howLikelyLintTargetIsInLibrary(FileInfo "/dummyPath/FooBar/Foo.fs")
+        )
+
+    [<Test>]
+    member this.``Unlikely if one of the parent dirs contain fsproj file with 'Console'``() =
+        let tempDir = Directory.CreateTempSubdirectory "libraryHeuristicTest"
+        let srcDir = tempDir.CreateSubdirectory "src"
+        let prjDir = srcDir.CreateSubdirectory "Console"
+        let subDir = prjDir.CreateSubdirectory "Namespace"
+        let file = FileInfo(Path.Combine(subDir.FullName, "Foo.fs"))
+        File.WriteAllText(Path.Combine(prjDir.FullName, "SomeProject.fsproj"), String.Empty)
+        let result =
+            try
+                howLikelyLintTargetIsInLibrary file
+            finally
+                tempDir.Delete true
+
+        Assert.AreEqual(
+            LibraryHeuristicResult.Unlikely,
+            result
+        )
+
+    [<Test>]
+    member this.``Likely if one of the parent dirs contain fsproj file with 'Console'``() =
+        let tempDir = Directory.CreateTempSubdirectory "libraryHeuristicTest"
+        let srcDir = tempDir.CreateSubdirectory "src"
+        let prjDir = srcDir.CreateSubdirectory "LibFoo"
+        let subDir = prjDir.CreateSubdirectory "Namespace"
+        let file = FileInfo(Path.Combine(subDir.FullName, "Foo.fs"))
+        File.WriteAllText(Path.Combine(prjDir.FullName, "SomeProject.fsproj"), String.Empty)
+        let result =
+            try
+                howLikelyLintTargetIsInLibrary file
+            finally
+                tempDir.Delete true
+
+        Assert.AreEqual(
+            LibraryHeuristicResult.Likely,
+            result
+        )
+
+    [<Test>]
+    member this.``Uncertain if none of the parent dirs contain any hint``() =
+        let tempDir = Directory.CreateTempSubdirectory "libraryHeuristicTest"
+        let srcDir = tempDir.CreateSubdirectory "src"
+        let prjDir = srcDir.CreateSubdirectory "Foo"
+        let subDir = prjDir.CreateSubdirectory "Namespace"
+        let file = FileInfo(Path.Combine(subDir.FullName, "Foo.fs"))
+        File.WriteAllText(Path.Combine(prjDir.FullName, "SomeProject.fsproj"), String.Empty)
+        let result =
+            try
+                howLikelyLintTargetIsInLibrary file
+            finally
+                tempDir.Delete true
+
+        Assert.AreEqual(
+            LibraryHeuristicResult.Uncertain,
+            result
+        )
+
+    [<Test>]
+    member this.``Still Uncertain if none of the RELEVANT parent dirs contain any hint (loop should not check until arriving to root / dir) cause 'librarian' shouldn't be a hint even if it starts with lib``() =
+        let tempDir = Directory.CreateTempSubdirectory "libraryHeuristicTest"
+        let homeDir = tempDir.CreateSubdirectory "home"
+        let userDir = homeDir.CreateSubdirectory "librarian"
+        let srcDir = userDir.CreateSubdirectory "src"
+        let prjDir = srcDir.CreateSubdirectory "Foo"
+        let subDir = prjDir.CreateSubdirectory "Namespace"
+        let file = FileInfo(Path.Combine(subDir.FullName, "Foo.fs"))
+        File.WriteAllText(Path.Combine(prjDir.FullName, "SomeProject.fsproj"), String.Empty)
+        let result =
+            try
+                howLikelyLintTargetIsInLibrary file
+            finally
+                tempDir.Delete true
+
+        Assert.AreEqual(
+            LibraryHeuristicResult.Uncertain,
+            result
         )
 
