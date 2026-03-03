@@ -113,26 +113,36 @@ let checkIfInLibrary (args: AstNodeRuleParams) : bool =
                 hasEntryPoint checkFileResults args.ProjectCheckInfo
                 || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
         | Some checkFileResults, None ->
+            let lastHint =
+                lazy(
+                    hasEntryPoint checkFileResults None
+                    || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                )
+
             // args.FilePath is empty when running tests
             if String.IsNullOrEmpty args.FilePath then
-                hasEntryPoint checkFileResults None
-                || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                lastHint.Value
             else
                 match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
                 | Likely -> false
                 | Unlikely -> true
                 | Uncertain ->
-                    hasEntryPoint checkFileResults None
-                    || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                    lastHint.Value
         | _ ->
+            let lastHint =
+                lazy(
+                    areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                )
+
             // args.FilePath is empty when running tests
             if String.IsNullOrEmpty args.FilePath then
-                areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                lastHint.Value
             else
                 match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
                 | Likely -> false
                 | Unlikely -> true
-                | Uncertain -> areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                | Uncertain ->
+                    lastHint.Value
 
     ruleNotApplicable
 
