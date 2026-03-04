@@ -124,10 +124,13 @@ let checkIfInLibrary (args: AstNodeRuleParams) : bool =
                 lastHint.Value
             else
                 match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
-                | Likely -> false
-                | Unlikely -> true
-                | Uncertain ->
+                | Likely ->
                     lastHint.Value
+                | Unlikely ->
+                    true
+                | Uncertain ->
+                    // because if it's .fsx it's not lib, and if it's just .fs we prefer to not give false positives
+                    true
         | _ ->
             let lastHint =
                 lazy(
