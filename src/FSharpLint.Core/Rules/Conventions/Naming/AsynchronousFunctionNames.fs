@@ -44,7 +44,14 @@ let runner (config: Config) (args: AstNodeRuleParams) =
                     Array.empty
                 | HasAsyncSuffix name 
                 | HasNoAsyncPrefixOrSuffix name ->
-                    let nameWithAsync = asyncSuffixOrPrefix + name
+                    let nameWithAsync = 
+                        if Char.IsUpper name.[0] then
+                            asyncSuffixOrPrefix + name
+                        else
+                            sprintf "%s%c%s"
+                                (asyncSuffixOrPrefix.ToLower())
+                                (Char.ToUpperInvariant name.[0])
+                                (name.Substring 1)
                     emitWarning identRange nameWithAsync "Async"
 
             let checkTaskFunction () =
