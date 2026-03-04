@@ -204,16 +204,8 @@ let runner (config: Config) (args: AstNodeRuleParams) =
             |> Array.concat
         
         Array.append (checkFuncs asyncFuncs taskFuncs) (checkFuncs taskFuncs asyncFuncs)
-
-    let likelyhoodOfBeingInLibrary =
-        match args.ProjectCheckInfo with
-        | Some projectInfo ->
-            projectInfo.ProjectContext.ProjectOptions.ProjectFileName
-            |> FileInfo
-            |> howLikelyLintTargetIsInLibrary
-        | None -> Unlikely
-
-    if config.Mode = OnlyPublicAPIsInLibraries && likelyhoodOfBeingInLibrary <> Likely then
+    
+    if config.Mode = OnlyPublicAPIsInLibraries && checkIfInLibrary args then
         Array.empty
     else
         match args.AstNode with

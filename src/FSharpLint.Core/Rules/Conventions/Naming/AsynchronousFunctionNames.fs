@@ -32,15 +32,7 @@ let runner (config: Config) (args: AstNodeRuleParams) =
         | Some(SynAccess.Public _) -> true
         | _ -> config.Mode = AllAPIs
 
-    let likelyhoodOfBeingInLibrary =
-        match args.ProjectCheckInfo with
-        | Some projectInfo ->
-            projectInfo.ProjectContext.ProjectOptions.ProjectFileName
-            |> FileInfo
-            |> howLikelyLintTargetIsInLibrary
-        | None -> Unlikely
-
-    if config.Mode = OnlyPublicAPIsInLibraries && likelyhoodOfBeingInLibrary <> Likely then
+    if config.Mode = OnlyPublicAPIsInLibraries && checkIfInLibrary args then
         Array.empty
     else
         match args.AstNode with
