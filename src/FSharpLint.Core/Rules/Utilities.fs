@@ -65,35 +65,28 @@ module LibraryHeuristics =
 
     [<TailCall>]
     let rec howLikelyLintTargetIsInLibrary (fs: FileSystemInfo): LibraryHeuristicResult =
-        let nonRecursiveFunc (fs: FileSystemInfo): LibraryHeuristicResult =
-            let libraryAbbrev = "lib"
-            let targetName = Path.GetFileNameWithoutExtension fs.FullName
-            let nameSegments =
-                Helper.Naming.QuickFixes.splitByCaseChange targetName
-                |> Seq.map (fun segment -> segment.ToLowerInvariant())
-            if nameSegments |> Seq.contains libraryAbbrev then
-                Likely
-            elif
-                nameSegments
-                |> Seq.exists (
-                    fun segment ->
-                        let subSegments = segment.Split possibleProjectNameSegmentSeparators
-                        subSegments
-                        |> Seq.exists (fun subSegment ->
-                            projectNamesUnlikelyToBeLibraries
-                            |> Seq.exists (fun noLibName -> noLibName = subSegment)
-                        )
-                ) then
-                Unlikely
-            elif targetName.ToLowerInvariant().EndsWith libraryAbbrev then
-                Likely
-            else
-                Uncertain
-
-        match nonRecursiveFunc fs with
-        | Likely -> Likely
-        | Unlikely -> Unlikely
-        | Uncertain ->
+        let libraryAbbrev = "lib"
+        let targetName = Path.GetFileNameWithoutExtension fs.FullName
+        let nameSegments =
+            Helper.Naming.QuickFixes.splitByCaseChange targetName
+            |> Seq.map (fun segment -> segment.ToLowerInvariant())
+        if nameSegments |> Seq.contains libraryAbbrev then
+            Likely
+        elif
+            nameSegments
+            |> Seq.exists (
+                fun segment ->
+                    let subSegments = segment.Split possibleProjectNameSegmentSeparators
+                    subSegments
+                    |> Seq.exists (fun subSegment ->
+                        projectNamesUnlikelyToBeLibraries
+                        |> Seq.exists (fun noLibName -> noLibName = subSegment)
+                    )
+            ) then
+            Unlikely
+        elif targetName.ToLowerInvariant().EndsWith libraryAbbrev then
+            Likely
+        else
             match fs with
             | :? FileInfo as file ->
                 howLikelyLintTargetIsInLibrary file.Directory
@@ -102,14 +95,10 @@ module LibraryHeuristics =
                 if not dir.Exists then
                     Uncertain
                 else
-                    let maybeParentDir = Option.ofObj dir.Parent
                     match dir.EnumerateFiles "*.fsproj" |> Seq.tryHead with
-                    | Some _projFile ->
-                        match maybeParentDir with
-                        | None -> Uncertain
-                        | Some parentDir -> nonRecursiveFunc parentDir
+                    | Some _projFile -> Uncertain
                     | None ->
-                        match maybeParentDir with
+                        match Option.ofObj dir.Parent with
                         | None -> Uncertain
                         | Some parentDir ->
                             howLikelyLintTargetIsInLibrary parentDir
