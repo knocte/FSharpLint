@@ -335,7 +335,6 @@ type TestNoAsyncRunSynchronouslyInLibraryHeuristic() =
             result
         )
 
-(* temporarily comment out to verify CI
     [<Test>]
     member this.``Likely if parent of project dir is 'tests'``() =
         let tempDir = Directory.CreateTempSubdirectory "libraryHeuristicTest"
@@ -356,5 +355,4 @@ type TestNoAsyncRunSynchronouslyInLibraryHeuristic() =
             LibraryHeuristicResult.Unlikely,
             result
         )
-*)
 
