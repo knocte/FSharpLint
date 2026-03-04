@@ -21,7 +21,7 @@
             let sourceText = SourceText.ofString source
 
             let! options = 
-                ParseFile.getProjectOptionsFromScript checker performanceTestSourceFile source
+                ParseFile.asyncGetProjectOptionsFromScript checker performanceTestSourceFile source
 
             let! parseResults =
                 checker.ParseFile(performanceTestSourceFile, sourceText, options |> checker.GetParsingOptionsFromProjectOptions |> fst)

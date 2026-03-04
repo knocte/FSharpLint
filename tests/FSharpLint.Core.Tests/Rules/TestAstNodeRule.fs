@@ -17,9 +17,9 @@ type TestAstNodeRuleBase (rule:Rule) =
         let parseResults =
             match maybeFileName with
             | Some fileName ->
-                ParseFile.parseSourceFile fileName input checker
+                ParseFile.asyncParseSourceFile fileName input checker
             | None ->
-                ParseFile.parseSource input checker
+                ParseFile.asyncParseSource input checker
 
         let astNodeRule =
             match rule with

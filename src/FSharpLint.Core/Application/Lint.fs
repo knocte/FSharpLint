@@ -449,7 +449,7 @@ module Lint =
                     let! parsedFiles =
                         files
                         |> List.filter (not << isIgnoredFile)
-                        |> List.map (fun file -> ParseFile.parseFile file checker (Some projectOptions))
+                        |> List.map (fun file -> ParseFile.asyncParseFile file checker (Some projectOptions))
                         |> Async.Sequential
 
                     let failedFiles = Array.choose getFailedFiles parsedFiles
@@ -588,7 +588,7 @@ module Lint =
         async {
             let checker = FSharpChecker.Create(keepAssemblyContents=true)
 
-            match! ParseFile.parseSource source checker with
+            match! ParseFile.asyncParseSource source checker with
             | ParseFile.Success(parseFileInformation) ->
                 let parsedFileInfo =
                     { Source = parseFileInformation.Text
@@ -641,7 +641,7 @@ module Lint =
         if IO.File.Exists filePath then
             let checker = FSharpChecker.Create(keepAssemblyContents=true)
 
-            match! ParseFile.parseFile filePath checker None with
+            match! ParseFile.asyncParseFile filePath checker None with
             | ParseFile.Success astFileParseInfo ->
                 let parsedFileInfo =
                     { Source = astFileParseInfo.Text
@@ -672,7 +672,7 @@ module Lint =
             
             let lintSingleFile filePath = async {
                 if IO.File.Exists filePath then
-                    match! ParseFile.parseFile filePath checker None with
+                    match! ParseFile.asyncParseFile filePath checker None with
                     | ParseFile.Success astFileParseInfo ->
                         let parsedFileInfo =
                             { Source = astFileParseInfo.Text

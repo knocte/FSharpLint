@@ -1,5 +1,7 @@
 namespace FSharpLint.Framework
 
+open System
+
 /// Provides functionality to parse F# files using `FSharp.Compiler.Service`.
 module ParseFile =
 
@@ -58,7 +60,7 @@ module ParseFile =
         | FSharpCheckFileAnswer.Aborted -> return Failed(AbortedTypeCheck)
     }
 
-    let getProjectOptionsFromScript (checker:FSharpChecker) file (source:string) = async {
+    let asyncGetProjectOptionsFromScript (checker:FSharpChecker) file (source:string) = async {
         let sourceText = SourceText.ofString source
         let assumeDotNetFramework = false
         let otherOpts = Array.singleton "--targetprofile:netstandard"
@@ -68,25 +70,46 @@ module ParseFile =
         return options
     }
 
+    let getProjectOptionsFromScriptAsync checker file source =
+        Async.StartAsTask(asyncGetProjectOptionsFromScript checker file source)
+
+    [<Obsolete "Use asyncGetProjectOptionsFromScript">]
+    let getProjectOptionsFromScript = asyncGetProjectOptionsFromScript
+
     /// Parses a file using `FSharp.Compiler.Service`.
-    let parseFile file (checker:FSharpChecker) projectOptions = async {
+    let asyncParseFile file (checker:FSharpChecker) projectOptions = async {
         let source = File.ReadAllText(file)
 
         let! projectOptions =
             match projectOptions with
             | Some(existingOptions) -> async { return existingOptions }
-            | None -> getProjectOptionsFromScript checker file source
+            | None -> asyncGetProjectOptionsFromScript checker file source
 
         return! parse file source (checker, projectOptions)
     }
 
+    let parseFileAsync file checker projectOptions = Async.StartAsTask(asyncParseFile file checker projectOptions)
+
+    [<Obsolete "Use asyncParseFile">]
+    let parseFile = asyncParseFile
+
     /// Parses source code using `FSharp.Compiler.Service`.
-    let parseSourceFile fileName source (checker:FSharpChecker) = async {
-        let! options = getProjectOptionsFromScript checker fileName source
+    let asyncParseSourceFile fileName source (checker:FSharpChecker) = async {
+        let! options = asyncGetProjectOptionsFromScript checker fileName source
 
         return! parse fileName source (checker, options)
     }
 
-    let parseSource source (checker:FSharpChecker) =
+    let parseSourceFileAsync fileName source checker = Async.StartAsTask(asyncParseSourceFile fileName source checker)
+
+    [<Obsolete "Use asyncParseSourceFile">]
+    let parseSourceFile = asyncParseSourceFile
+
+    let asyncParseSource source (checker:FSharpChecker) =
         let fileName = Path.ChangeExtension(Path.GetTempFileName(), "fsx")
-        parseSourceFile fileName source checker
+        asyncParseSourceFile fileName source checker
+
+    let parseSourceAsync source checker = Async.StartAsTask(asyncParseSource source checker)
+
+    [<Obsolete "Use asyncParseSource">]
+    let parseSource = asyncParseSource
