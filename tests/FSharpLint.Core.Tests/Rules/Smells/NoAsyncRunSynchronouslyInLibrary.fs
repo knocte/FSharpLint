@@ -335,3 +335,24 @@ type TestNoAsyncRunSynchronouslyInLibraryHeuristic() =
             result
         )
 
+    [<Test>]
+    member this.``Likely if parent of project dir is 'tests'``() =
+        let tempDir = Directory.CreateTempSubdirectory "libraryHeuristicTest"
+        let homeDir = tempDir.CreateSubdirectory "home"
+        let userDir = homeDir.CreateSubdirectory "librarian"
+        let srcDir = userDir.CreateSubdirectory "tests"
+        let prjDir = srcDir.CreateSubdirectory "Foo"
+        let subDir = prjDir.CreateSubdirectory "Namespace"
+        let file = FileInfo(Path.Combine(subDir.FullName, "Foo.fs"))
+        File.WriteAllText(Path.Combine(prjDir.FullName, "SomeProject.fsproj"), String.Empty)
+        let result =
+            try
+                howLikelyLintTargetIsInLibrary file
+            finally
+                tempDir.Delete true
+
+        Assert.AreEqual(
+            LibraryHeuristicResult.Unlikely,
+            result
+        )
+
