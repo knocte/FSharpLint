@@ -32,7 +32,7 @@ let runner (config: Config) (args: AstNodeRuleParams) =
         | Some(SynAccess.Public _) -> true
         | _ -> config.Mode = AllAPIs
 
-    if config.Mode = OnlyPublicAPIsInLibraries && checkIfInLibrary args then
+    if isInObsoleteMethodOrFunction (args.GetParents args.NodeIndex) || (config.Mode = OnlyPublicAPIsInLibraries && checkIfInLibrary args = Unlikely) then
         Array.empty
     else
         match args.AstNode with

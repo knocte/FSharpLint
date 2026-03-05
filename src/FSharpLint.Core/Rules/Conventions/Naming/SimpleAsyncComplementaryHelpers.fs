@@ -205,7 +205,7 @@ let runner (config: Config) (args: AstNodeRuleParams) =
         
         Array.append (checkFuncs asyncFuncs taskFuncs) (checkFuncs taskFuncs asyncFuncs)
     
-    if config.Mode = OnlyPublicAPIsInLibraries && checkIfInLibrary args then
+    if isInObsoleteMethodOrFunction (args.GetParents args.NodeIndex) || (config.Mode = OnlyPublicAPIsInLibraries && checkIfInLibrary args = Unlikely) then
         Array.empty
     else
         match args.AstNode with

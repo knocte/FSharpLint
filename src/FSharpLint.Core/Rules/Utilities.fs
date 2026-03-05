@@ -69,7 +69,7 @@ module LibraryHeuristics =
         |]
 
     [<TailCall>]
-    let rec howLikelyLintTargetIsInLibrary (fs: FileSystemInfo): LibraryHeuristicResult =
+    let rec howLikelyLintTargetIsInLibraryJudgingByNames (fs: FileSystemInfo): LibraryHeuristicResult =
         let nonRecursiveFunc (fs: FileSystemInfo): LibraryHeuristicResult =
             let libraryAbbrev = "lib"
             let targetName = Path.GetFileNameWithoutExtension fs.FullName
@@ -101,7 +101,7 @@ module LibraryHeuristics =
         | Uncertain ->
             match fs with
             | :? FileInfo as file ->
-                howLikelyLintTargetIsInLibrary file.Directory
+                howLikelyLintTargetIsInLibraryJudgingByNames file.Directory
             | :? DirectoryInfo as dir ->
                 // some tests have fake paths, so we need this to not throw inside them
                 if not dir.Exists then
@@ -117,10 +117,10 @@ module LibraryHeuristics =
                         match maybeParentDir with
                         | None -> Uncertain
                         | Some parentDir ->
-                            howLikelyLintTargetIsInLibrary parentDir
+                            howLikelyLintTargetIsInLibraryJudgingByNames parentDir
             | _ -> Uncertain
 
-    let hasEntryPoint (checkFileResults: FSharpCheckFileResults) (maybeProjectCheckResults: Option<FSharpCheckProjectResults>) =
+    let private hasEntryPoint (checkFileResults: FSharpCheckFileResults) (maybeProjectCheckResults: Option<FSharpCheckProjectResults>) =
         let hasEntryPointInTheSameFile =
             match checkFileResults.ImplementationFile with
             | Some implFile -> implFile.HasExplicitEntryPoint
@@ -149,10 +149,10 @@ module LibraryHeuristics =
                 | _ -> ()
         }
 
-    let testMethodAttributes = [ "Test"; "TestMethod" ]
-    let testClassAttributes = [ "TestFixture"; "TestClass" ]
+    let private testMethodAttributes = [ "Test"; "TestMethod" ]
+    let private testClassAttributes = [ "TestFixture"; "TestClass" ]
 
-    let areThereTestsInSameFileOrProject (nodes: array<AbstractSyntaxArray.Node>) (maybeProjectCheckResults: FSharpCheckProjectResults option) =
+    let private areThereTestsInSameFileOrProject (nodes: array<AbstractSyntaxArray.Node>) (maybeProjectCheckResults: FSharpCheckProjectResults option) =
         let isTestMethodOrClass node =
             match node with
             | AstNode.MemberDefinition(SynMemberDefn.Member(SynBinding(_, _, _, _, attributes, _, _, _, _, _, _, _, _), _)) ->
@@ -206,49 +206,47 @@ module LibraryHeuristics =
 
         parents |> List.exists isObsolete
 
-    let checkIfInLibrary (args: AstNodeRuleParams) : bool =
-        isInObsoleteMethodOrFunction (args.GetParents args.NodeIndex)
-        ||
-        match (args.CheckInfo, args.ProjectCheckInfo) with
-        | Some checkFileResults, Some checkProjectResults ->
-            let projectFile = FileInfo checkProjectResults.ProjectContext.ProjectOptions.ProjectFileName
-            match howLikelyLintTargetIsInLibrary projectFile with
-            | Likely -> false
-            | Unlikely -> true
-            | Uncertain ->
-                hasEntryPoint checkFileResults args.ProjectCheckInfo
-                || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
-        | Some checkFileResults, None ->
-            let lastHint =
-                lazy(
-                    hasEntryPoint checkFileResults None
-                    || areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
-                )
+    let checkIfInLibrary (args: AstNodeRuleParams) : LibraryHeuristicResult =
+        let lastHint =
+            lazy(
+                if areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo then
+                    Unlikely
+                else
+                    match args.CheckInfo with
+                    | Some checkFileResults when hasEntryPoint checkFileResults args.ProjectCheckInfo ->
+                        Unlikely
+                    | _ -> Uncertain
+            )
 
+        match (args.CheckInfo, args.ProjectCheckInfo) with
+        | Some _checkFileResults, Some checkProjectResults ->
+            let projectFile = FileInfo checkProjectResults.ProjectContext.ProjectOptions.ProjectFileName
+            match howLikelyLintTargetIsInLibraryJudgingByNames projectFile with
+            | Uncertain -> lastHint.Value
+            | veryCertain -> veryCertain
+        | Some _checkFileResults, None ->
             // args.FilePath is empty when running tests
             if String.IsNullOrEmpty args.FilePath then
                 lastHint.Value
             else
-                match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
-                | Likely ->
-                    lastHint.Value
-                | Unlikely ->
-                    true
-                | Uncertain ->
-                    // because if it's .fsx it's not lib, and if it's just .fs we prefer to not give false positives
-                    true
+                match howLikelyLintTargetIsInLibraryJudgingByNames (FileInfo args.FilePath) with
+                | Uncertain -> lastHint.Value
+                | veryCertain -> veryCertain
+
         | _ ->
             let lastHint =
                 lazy(
-                    areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo
+                    if areThereTestsInSameFileOrProject args.SyntaxArray args.ProjectCheckInfo then
+                        Unlikely
+                    else
+                        Uncertain
                 )
 
             // args.FilePath is empty when running tests
             if String.IsNullOrEmpty args.FilePath then
                 lastHint.Value
             else
-                match howLikelyLintTargetIsInLibrary (FileInfo args.FilePath) with
-                | Likely -> false
-                | Unlikely -> true
-                | Uncertain ->
-                    lastHint.Value
+                match howLikelyLintTargetIsInLibraryJudgingByNames (FileInfo args.FilePath) with
+                | Uncertain -> lastHint.Value
+                | veryCertain -> veryCertain
+
