@@ -1,8 +1,10 @@
 {
-    "typePrefixing": {
+    "genericTypesNames": {
         "enabled": true,
         "config": {
-            "mode": "Always"
+            "naming": "PascalCase",
+            "underscores": "None",
+            "prefix": "T"
         }
     }
 }
