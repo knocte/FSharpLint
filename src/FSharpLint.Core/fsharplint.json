@@ -220,7 +220,8 @@
         "enabled": true,
         "config": {
             "naming": "PascalCase",
-            "underscores": "None"
+            "underscores": "None",
+            "prefix": "T"
         }
     },
     "publicValuesNames": {
