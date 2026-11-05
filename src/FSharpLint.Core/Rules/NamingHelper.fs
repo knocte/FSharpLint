@@ -99,9 +99,15 @@ let private isNotDoubleBackTickedIdent =
 let private notOperator = isOperator >> not
 
 let isPascalCase (identifier:string) =
+    let x = System.Collections.Generic.List [ 1; 2 ]
+    let l = x.Count
     let withoutUnderscorePrefix = identifier.TrimStart '_'
     if withoutUnderscorePrefix.Length = 0 then true
-    else Char.IsUpper withoutUnderscorePrefix.[0]
+    else
+        if l = 0 then
+            true
+        else
+            Char.IsUpper withoutUnderscorePrefix.[0]
 
 let isCamelCase (identifier:string) =
     let withoutUnderscorePrefix = identifier.TrimStart '_'
