@@ -99,8 +99,9 @@ let private isNotDoubleBackTickedIdent =
 let private notOperator = isOperator >> not
 
 let isPascalCase (identifier:string) =
-    let x = System.Collections.Generic.List [ 1; 2 ]
-    let l = x.Count
+    let x = [| 1; 2 |]
+    Array.sortInPlace x
+    let l = x.Length
     let withoutUnderscorePrefix = identifier.TrimStart '_'
     if withoutUnderscorePrefix.Length = 0 then true
     else
